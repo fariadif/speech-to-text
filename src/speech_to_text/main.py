@@ -35,6 +35,8 @@ def get_model():
     if not os.path.exists(MODEL_PATH):
         os.makedirs("models", exist_ok=True)
 
+        print(f"Downloading model {MODEL_NAME.value}")
+
         urllib.request.urlretrieve(
             f"https://huggingface.co/ggerganov/whisper.cpp/resolve/main/{MODEL_NAME.value}",
             MODEL_PATH,
