@@ -1,0 +1,23 @@
+[project]
+name = "speech-to-text"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Fábio Faria Dias",email = "fabiofariadias@hotmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "pywhispercpp (>=1.4.1,<2.0.0)",
+    "sounddevice (>=0.5.5,<0.6.0)"
+]
+
+[tool.poetry]
+packages = [{include = "speech_to_text", from = "src"}]
+
+[tool.poetry.scripts]
+speech-to-text = "speech_to_text.main:main"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
