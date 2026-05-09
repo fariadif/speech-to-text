@@ -6,7 +6,13 @@ import sys
 
 import numpy as np
 import sounddevice as sd
+import time
 from pywhispercpp.model import Model
+
+from .broker import Broker
+from .modules.listener import Listener
+from .modules.logger import Logger
+from .modules.inference import Inference
 
 
 SAMPLE_RATE = 16000
@@ -59,29 +65,47 @@ def package_version():
 
 def main():
     print(f"Starting {package_name()}-v{package_version()} project ...")
-    get_model()
-    model = Model(MODEL_PATH, language="en")
+    # get_model()
+    # model = Model(MODEL_PATH, language="en")
 
     signal.signal(signal.SIGINT, handle_stop)  # Ctrl+C
     signal.signal(signal.SIGTERM, handle_stop)  # kill command
 
-    print("Listening... (Ctrl+C to stop)")
+    # print("Listening... (Ctrl+C to stop)")
+    # while running:
+    #     audio = sd.rec(
+    #         int(DURATION * SAMPLE_RATE),
+    #         samplerate=SAMPLE_RATE,
+    #         channels=1,
+    #         dtype="float32",
+    #     )
+
+    #     sd.wait()
+
+    #     if not running:
+    #         break
+
+    #     segments = model.transcribe(audio.flatten())
+    #     for seg in segments:
+    #         print(seg.text)
+
+    broker = Broker()
+    broker.start()
+
+    listener = Listener("Microphone", broker)
+    logger = Logger("Logger", broker)
+    inference = Inference("Inference", broker)
+
+    listener.start()
+    logger.start()
+    inference.start()
+
     while running:
-        audio = sd.rec(
-            int(DURATION * SAMPLE_RATE),
-            samplerate=SAMPLE_RATE,
-            channels=1,
-            dtype="float32",
-        )
+        time.sleep(5)  # let things run
 
-        sd.wait()
-
-        if not running:
-            break
-
-        segments = model.transcribe(audio.flatten())
-        for seg in segments:
-            print(seg.text)
+    listener.stop()
+    logger.stop()
+    broker.stop()
 
     print(f"Closing {package_name()}-v{package_version()} project ...")
 
