@@ -16,8 +16,8 @@ class Broker:
     def __init__(self):
         self._subscriptions: dict[str, list[queue.Queue]] = {}
         self._lock = threading.Lock()
-        self._inbox = queue.Queue[Message | None] = queue.Queue()
-        self._thread = threading.Thread(target=self._dispatch_loop, daemon=True)
+        self._inbox: queue.Queue[Message | None] = queue.Queue()
+        self._thread = threading.Thread(target=self.dispatch_loop, daemon=True)
 
     def start(self):
         self._thread.start()
