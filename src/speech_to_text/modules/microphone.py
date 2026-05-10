@@ -5,7 +5,7 @@ import threading
 import sounddevice as sd
 
 
-class Listener(Module):
+class Microphone(Module):
     SAMPLE_RATE = 16000
     # DURATION_S = 30 / 1000  # seconds per chunk
     DURATION_S = 5  # seconds per chunk
