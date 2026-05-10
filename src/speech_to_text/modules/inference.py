@@ -16,7 +16,7 @@ class Inference(Module):
     MODEL_NAME = WhisperModel.BASE
     MODEL_PATH = f"models/{MODEL_NAME.value}"
 
-    def _get_model(self):
+    def _download_model(self):
         import os
         import urllib.request
 
@@ -31,17 +31,19 @@ class Inference(Module):
             )
 
     def on_start(self):
-        self._get_model()
+        self._download_model()
         self.subscribe("listener.audio")
 
         self._model = Model(self.MODEL_PATH, language="en")
 
     def on_message(self, msg: Message):
-        # if msg.topic == "listener.audio":
-        print(f"[{self.name}] {msg.topic} @ {msg.timestamp:.2f} -> Received an audio")
+        print(
+            f"[{self.name}] Received a message from {msg.topic} @ {msg.timestamp:.2f}"
+        )
 
-        audio = msg.payload["value"]
-        segments = self._model.transcribe(audio.flatten())
+        if msg.topic == "listener.audio":
+            audio = msg.payload["value"]
+            segments = self._model.transcribe(audio.flatten())
 
-        for seg in segments:
-            print(f"[{self.name}] {seg.text}")
+            for seg in segments:
+                print(f"[{self.name}] {msg.topic} @ {msg.timestamp:.2f} -> {seg.text}")

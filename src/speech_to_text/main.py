@@ -68,9 +68,9 @@ def main():
     broker = Broker()
     broker.start()
 
-    listener = Listener("Microphone", broker)
-    logger = Logger("Logger", broker)
-    inference = Inference("Inference", broker)
+    listener = Listener("Microphone Controller", broker)
+    logger = Logger("Logger Controller", broker)
+    inference = Inference("Inference Controller", broker)
 
     listener.start()
     logger.start()
