@@ -1,23 +1,23 @@
 from ..module import Module
 
-
+import threading
 import sounddevice as sd
-import time
-
-SAMPLE_RATE = 16000
-DURATION = 5  # seconds per chunk
 
 
 class Listener(Module):
+    SAMPLE_RATE = 16000
+    DURATION_S = 30 / 1000  # seconds per chunk
+
     def on_start(self):
         print(f"[{self.name}] started")
+        self._producer = threading.Thread(target=self._produce, daemon=True)
+        self._producer.start()
 
-        self._running = True
-
+    def _produce(self):
         while not self._stop_event.is_set():
             audio = sd.rec(
-                int(DURATION * SAMPLE_RATE),
-                samplerate=SAMPLE_RATE,
+                int(self.DURATION_S * self.SAMPLE_RATE),
+                samplerate=self.SAMPLE_RATE,
                 channels=1,
                 dtype="float32",
             )
@@ -30,6 +30,7 @@ class Listener(Module):
 
     def on_stop(self):
         print("Listener on stop called")
+        self._producer.join()
 
-    def on_message(self, mesg):
-        pass
+    def on_message(self, msg):
+        print(f"[{self.name}] received {msg.topic}")
