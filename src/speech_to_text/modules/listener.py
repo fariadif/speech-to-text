@@ -16,7 +16,7 @@ class Listener(Module):
         self._producer.start()
 
     def _produce(self):
-        while not self._stop_event.is_set():
+        while True:
             audio = sd.rec(
                 int(self.DURATION_S * self.SAMPLE_RATE),
                 samplerate=self.SAMPLE_RATE,
@@ -25,6 +25,9 @@ class Listener(Module):
             )
 
             sd.wait()
+
+            if self._stop_event.is_set():
+                break
 
             self.publish("listener.audio", {"value": audio})
 
