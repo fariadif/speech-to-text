@@ -1,4 +1,6 @@
 from ..module import Module, Message
+from ..topics import Topic
+
 from enum import Enum
 
 from pywhispercpp.model import Model
@@ -32,7 +34,7 @@ class Inference(Module):
 
     def on_start(self):
         self._download_model()
-        self.subscribe("microphone.audio")
+        self.subscribe(Topic.MICROPHONE_AUDIO)
 
         self._model = Model(self.MODEL_PATH, language="en")
 
@@ -41,8 +43,8 @@ class Inference(Module):
             f"[{self.name}] Received a message from {msg.topic} @ {msg.timestamp:.2f}"
         )
 
-        if msg.topic == "microphone.audio":
+        if msg.topic == Topic.MICROPHONE_AUDIO:
             audio = msg.payload["value"]
             segments = self._model.transcribe(audio.flatten())
 
-            self.publish("inference.transcription", {"value": segments})
+            self.publish(Topic.INFERENCE_TRANSCRIPTION, {"value": segments})
