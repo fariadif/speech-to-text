@@ -32,7 +32,7 @@ class Inference(Module):
 
     def on_start(self):
         self._download_model()
-        self.subscribe("listener.audio")
+        self.subscribe("microphone.audio")
 
         self._model = Model(self.MODEL_PATH, language="en")
 
@@ -41,7 +41,7 @@ class Inference(Module):
             f"[{self.name}] Received a message from {msg.topic} @ {msg.timestamp:.2f}"
         )
 
-        if msg.topic == "listener.audio":
+        if msg.topic == "microphone.audio":
             audio = msg.payload["value"]
             segments = self._model.transcribe(audio.flatten())
 
