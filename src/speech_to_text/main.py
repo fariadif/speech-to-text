@@ -3,10 +3,11 @@ from importlib.metadata import distribution, version
 from enum import Enum
 import signal
 import sys
+import time
+import threading
 
 import numpy as np
 import sounddevice as sd
-import time
 from pywhispercpp.model import Model
 
 from .broker import Broker
@@ -31,7 +32,7 @@ MODEL_NAME = WhisperModel.BASE
 MODEL_PATH = f"models/{MODEL_NAME.value}"
 
 
-running = True
+stop_event = threading.Event()
 
 
 def get_model():
@@ -50,9 +51,8 @@ def get_model():
 
 
 def handle_stop(signum, frame):
-    global running
     print("\nStopping")
-    running = False
+    stop_event.set()
 
 
 def package_name():
@@ -100,8 +100,7 @@ def main():
     logger.start()
     inference.start()
 
-    while running:
-        time.sleep(5)  # let things run
+    stop_event.wait()
 
     listener.stop()
     logger.stop()
