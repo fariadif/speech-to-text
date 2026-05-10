@@ -45,5 +45,4 @@ class Inference(Module):
             audio = msg.payload["value"]
             segments = self._model.transcribe(audio.flatten())
 
-            for seg in segments:
-                print(f"[{self.name}] {msg.topic} @ {msg.timestamp:.2f} -> {seg.text}")
+            self.publish("inference.transcription", {"value": segments})
