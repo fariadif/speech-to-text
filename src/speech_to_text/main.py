@@ -11,7 +11,7 @@ import sounddevice as sd
 from pywhispercpp.model import Model
 
 from .broker import Broker
-from .modules.listener import Listener
+from .modules.microphone import Microphone
 from .modules.logger import Logger
 from .modules.inference import Inference
 
@@ -68,17 +68,17 @@ def main():
     broker = Broker()
     broker.start()
 
-    listener = Listener("Microphone Controller", broker)
+    microphone = Microphone("Microphone Controller", broker)
     logger = Logger("Logger Controller", broker)
     inference = Inference("Inference Controller", broker)
 
-    listener.start()
+    microphone.start()
     logger.start()
     inference.start()
 
     stop_event.wait()
 
-    listener.stop()
+    microphone.stop()
     logger.stop()
     broker.stop()
 
