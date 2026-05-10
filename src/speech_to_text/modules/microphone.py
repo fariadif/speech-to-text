@@ -29,12 +29,12 @@ class Microphone(Module):
             if self._stop_event.is_set():
                 break
 
-            self.publish("listener.audio", {"value": audio})
+            self.publish("microphone.audio", {"value": audio})
 
         self.publish("system.shutdown", None)
 
     def on_stop(self):
-        print("Listener on stop called")
+        print("Microphone on stop called")
         self._producer.join()
 
     def on_message(self, msg):
