@@ -1,7 +1,9 @@
 import queue
+
 import threading
 
 from .broker import Broker, Message
+from .topics import Topic
 
 
 class Module:
@@ -12,11 +14,11 @@ class Module:
         self._thread = threading.Thread(target=self._run, name=name, daemon=True)
         self._stop_event = threading.Event()
 
-    def subscribe(self, *topics: str):
+    def subscribe(self, *topics: Topic):
         for topic in topics:
             self._broker.subscribe(topic, self._inbox)
 
-    def publish(self, topic: str, payload) -> None:
+    def publish(self, topic: Topic, payload) -> None:
         self._broker.publish(Message(topic=topic, payload=payload))
 
     def start(self):

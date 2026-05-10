@@ -1,4 +1,5 @@
 from ..module import Module
+from ..topics import Topic
 
 import threading
 
@@ -29,9 +30,9 @@ class Microphone(Module):
             if self._stop_event.is_set():
                 break
 
-            self.publish("microphone.audio", {"value": audio})
+            self.publish(Topic.MICROPHONE_AUDIO, {"value": audio})
 
-        self.publish("system.shutdown", None)
+        self.publish(Topic.SYSTEM_SHUTDOWN, None)
 
     def on_stop(self):
         print("Microphone on stop called")
