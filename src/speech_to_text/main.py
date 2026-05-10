@@ -1,14 +1,9 @@
 from importlib.metadata import distribution, version
 
-from enum import Enum
 import signal
 import sys
-import time
 import threading
 
-import numpy as np
-import sounddevice as sd
-from pywhispercpp.model import Model
 
 from .broker import Broker
 from .modules.microphone import Microphone
