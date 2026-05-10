@@ -16,10 +16,6 @@ from .modules.logger import Logger
 from .modules.inference import Inference
 
 
-SAMPLE_RATE = 16000
-DURATION = 5  # seconds per chunk
-
-
 class WhisperModel(Enum):
     TINY = "ggml-tiny.bin"
     BASE = "ggml-base.bin"
@@ -65,29 +61,9 @@ def package_version():
 
 def main():
     print(f"Starting {package_name()}-v{package_version()} project ...")
-    # get_model()
-    # model = Model(MODEL_PATH, language="en")
 
     signal.signal(signal.SIGINT, handle_stop)  # Ctrl+C
     signal.signal(signal.SIGTERM, handle_stop)  # kill command
-
-    # print("Listening... (Ctrl+C to stop)")
-    # while running:
-    #     audio = sd.rec(
-    #         int(DURATION * SAMPLE_RATE),
-    #         samplerate=SAMPLE_RATE,
-    #         channels=1,
-    #         dtype="float32",
-    #     )
-
-    #     sd.wait()
-
-    #     if not running:
-    #         break
-
-    #     segments = model.transcribe(audio.flatten())
-    #     for seg in segments:
-    #         print(seg.text)
 
     broker = Broker()
     broker.start()
@@ -112,5 +88,4 @@ def main():
 
 
 # TODO:
-# The transcription takes time andd the audio recording stays paused until its next initialization.
-# I have to separate these two modules (audio recording / audio transcription ) in separate threads.
+# Use a voice activity detector to get the start and end of a speech

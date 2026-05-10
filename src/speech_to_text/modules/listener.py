@@ -1,12 +1,14 @@
 from ..module import Module
 
 import threading
+
 import sounddevice as sd
 
 
 class Listener(Module):
     SAMPLE_RATE = 16000
-    DURATION_S = 30 / 1000  # seconds per chunk
+    # DURATION_S = 30 / 1000  # seconds per chunk
+    DURATION_S = 5  # seconds per chunk
 
     def on_start(self):
         print(f"[{self.name}] started")
