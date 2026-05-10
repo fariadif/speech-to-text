@@ -15,35 +15,7 @@ from .modules.microphone import Microphone
 from .modules.logger import Logger
 from .modules.inference import Inference
 
-
-class WhisperModel(Enum):
-    TINY = "ggml-tiny.bin"
-    BASE = "ggml-base.bin"
-    SMALL = "ggml-small.bin"
-    MEDIUM = "ggml-medium.bin"
-    LARGE = "ggml-large.bin"
-
-
-MODEL_NAME = WhisperModel.BASE
-MODEL_PATH = f"models/{MODEL_NAME.value}"
-
-
 stop_event = threading.Event()
-
-
-def get_model():
-    import os
-    import urllib.request
-
-    if not os.path.exists(MODEL_PATH):
-        os.makedirs("models", exist_ok=True)
-
-        print(f"Downloading model {MODEL_NAME.value}")
-
-        urllib.request.urlretrieve(
-            f"https://huggingface.co/ggerganov/whisper.cpp/resolve/main/{MODEL_NAME.value}",
-            MODEL_PATH,
-        )
 
 
 def handle_stop(signum, frame):
