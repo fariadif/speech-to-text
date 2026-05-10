@@ -30,7 +30,7 @@ class Module:
     def _run(self):
         self.on_start()
 
-        while True:
+        while not self._stop_event.is_set():
             msg = self._inbox.get()
 
             if msg is None:
